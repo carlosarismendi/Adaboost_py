@@ -3,39 +3,43 @@ from data_manager import DataManager
 from classifier_weak import ClassifierWeak
 import numpy as np
 
-adb = Adaboost(200, 200)
+adb = Adaboost(10, 10)
 dm = DataManager()
 percentage = 60
 
 def count_correct_predictions(predictions, tags):
     hits = 0
-    for i in range(len(tags)):
+    size_tags = len(tags)    
+    for i in range(size_tags):
         hits += 1 if predictions[i] == tags[i] else 0
     
     return hits
 
 
 def print_results(prediction_training, prediction_test, training_tags, test_tags):
+    size_training = len(training_tags)
+    size_test = len(test_tags)
     training_hits = count_correct_predictions(prediction_training, training_tags)
     test_hits = count_correct_predictions(prediction_test, test_tags)
 
-    training_hits_percentage = training_hits * 100 / len(training_tags)
-    test_hits_percentage = test_hits * 100 / len(test_tags)
+    training_hits_percentage = training_hits * 100 / size_training
+    test_hits_percentage = test_hits * 100 / size_test
 
-    print('\nNumber of weak classifiers per strong: ' + adb.T_CLASSIFIERS)
-    print('\nNumber of attempts to obtain a good weak classifier: ' + adb.A_ATTEMPTS)
-    print('\nTotal images: ' + (len(prediction_training) + len(prediction_test)))
-    print('\nTraining images: ' + len(prediction_training))
-    print('\nTest images: ' + len(prediction_test))
-    print('\nHits for training images: ' + training_hits + " of " + prediction_training + " | Percentage hits: " + training_hits_percentage)
-    print('\nHits for test images: ' + test_hits + " of " + prediction_test + " | Percentage hits: " + test_hits_percentage)
+    print('\nNumber of weak classifiers per strong: ' + str(adb.T_CLASSIFIERS))
+    print('Number of attempts to obtain a good weak classifier: ' + str(adb.A_ATTEMPTS))
+    print('Total images: ' + str((len(prediction_training) + len(prediction_test))))
+    print('Training images: ' + str(len(prediction_training)))
+    print('Test images: ' + str(len(prediction_test)))
+    print('Hits for training images: ' + str(training_hits) + " of " + str(size_training) + " | Percentage hits: " + str(training_hits_percentage))
+    print('Hits for test images: ' + str(test_hits) + " of " + str(size_test) + " | Percentage hits: " + str(test_hits_percentage))
     print('\n')
 
 
 def generate_classifiers(data): #data is expected to be 1D array
     classifiers = []
+    print('')
     for digit in range(10):
-        print('\nClassifier por digit: ' + str(digit))
+        print('Classifier for digit: ' + str(digit))
         training_tags = dm.generate_tags_01(dm.training_set, digit)
         classifier = adb.adaboost(data, training_tags)
         classifiers.append(classifier)

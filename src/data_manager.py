@@ -5,8 +5,8 @@ import numpy as np
 
 class DataManager:
     def __init__(self):
-        self.training_set = []
-        self.test_set = []
+        self.training_set = np.empty(10, Image)
+        self.test_set = np.empty(10, Image)
 
     def load_db_from_path(self, folder):
         mnistImages = []
@@ -32,29 +32,32 @@ class DataManager:
 
 
     def split_data(self, data, percentage):
-        for digit in range(len(data)):
+        size_data = len(data)
+        for digit in range(size_data):
             total = len(data[digit])
             n_training = total - (total - (total * percentage / 100))            
             n_training = int(n_training)
-            digit_images = []
+            digit_images = np.empty(n_training, Image)
 
             for image in range(n_training): # Images for training
-                digit_images.append(data[digit][image])
+                digit_images[image] = data[digit][image]
 
-            self.training_set.append(digit_images)
-            digit_images = []
+            self.training_set[digit] = digit_images
+            digit_images = np.empty(total - n_training, Image)
 
             for image in range(n_training, total): # Images for test
-                digit_images.append(data[digit][image])
+                digit_images[image - n_training] = data[digit][image]
             
-            self.test_set.append(digit_images)
+            self.test_set[digit] = (digit_images)
 
 
     def generate_tags_01(self, data, validDigit): #data is expected to be a 2D array
         totalData = 0
         index = 0
+        size_data = len(data)
+        size_data_valid = len(data[validDigit])
 
-        for i in range(len(data)):
+        for i in range(size_data):
             totalData += len(data[i])
 
         for i in range(validDigit):
@@ -64,10 +67,10 @@ class DataManager:
         for i in range(index):
             tags[i] = -1
 
-        for i in range(index, index+len(data[validDigit])):
+        for i in range(index, index+size_data_valid):
             tags[i] = 1
         
-        for i in range(index+len(data[validDigit]), totalData):
+        for i in range(index+size_data_valid, totalData):
             tags[i] = -1
 
         return tags
@@ -75,22 +78,32 @@ class DataManager:
     
     def generate_tags_09(self, data): #data is expected to be a 2D array
         totalData = 0
-
-        for i in range(len(data)):
+        size_data = len(data)
+        for i in range(size_data):
             totalData += len(data[i])
                 
-        tags = []
+        tags = np.empty(totalData)
+        index = 0
         for digit in range(10):
-            for image in range(len(data[digit])):
-                tags.append(digit)
+            size_data_digit = len(data[digit])
+            for image in range(size_data_digit):
+                tags[index] = digit
+                index += 1
 
         return tags
 
     
     def flatten(self, array_2D):        
-        array_1D = []
-        for i in range(len(array_2D)):
+        size_array_2D = len(array_2D)
+        total = 0
+        for i in range(size_array_2D):
+            total += len(array_2D[i])
+
+        array_1D = np.empty(total, Image)        
+        index = 0
+        for i in range(size_array_2D):
             for img in array_2D[i]:
-                array_1D.append(img)
+                array_1D[index] = img
+                index += 1
 
         return array_1D

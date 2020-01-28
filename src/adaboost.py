@@ -21,15 +21,16 @@ class Adaboost:
 
     
     def apply_classifier(self, classifier, data): #data is expected to be a 1D array
-        classifier.classification = np.empty(len(data))
+        size_data = len(data)
+        classifier.classification = np.empty(size_data)
 
         if classifier.direction == constant.LEFT:
-            for image in range(len(data)):
+            for image in range(size_data):
                 color = data[image].image_data[classifier.pixel]
                 classifier.classification[image] = 1 if color <= classifier.edge else -1
         
         else:
-            for image in range(len(data)):
+            for image in range(size_data):
                 color = data[image].image_data[classifier.pixel]
                 classifier.classification[image] = 1 if color > classifier.edge else -1
 
@@ -39,7 +40,8 @@ class Adaboost:
     def calculate_error(self, classifier, tags, D):
 
         error = 0.0
-        for i in range(len(tags)):
+        size_tags = len(tags)
+        for i in range(size_tags):        
             e = 0 if classifier.classification[i] == tags[i] else 1
             error += D[i] * e
 
@@ -53,11 +55,12 @@ class Adaboost:
     
     def update_D(self, classifier, tags, D):
         Z = 0.0
-        for i in range(len(tags)):
+        size_tags = len(tags)
+        for i in range(size_tags):
             D[i] = D[i] * exp(-classifier.confidence * tags[i] * classifier.classification[i])
             Z += D[i]
         
-        for i in range(len(tags)):
+        for i in range(size_tags):
             D[i] = D[i] / Z
 
         return D
@@ -93,7 +96,7 @@ class Adaboost:
         return classifiers
 
 
-    def _apply_strong_classif(self, image_, classifier):
+    def _apply_strong_classif(self, image, classifier):
         data = [image]
         for c in classifier:
             c.classification = self.apply_classifier(c, data)
@@ -106,15 +109,20 @@ class Adaboost:
 
     
     def apply_strong_classifiers(self, data, classifiers):
-        results = np.empty(len(data))
-        for image in range(len(data)):
+        size_data = len(data)
+        size_classifiers = len(classifiers)
+        results = np.empty(size_data)
+
+        for image in range(size_data):
             digit = 0
             maxPrediction = -999999.0
 
-            for c in range(len(classifiers)):
+            for c in range(size_classifiers):
                 prediction = self._apply_strong_classif(data[image], classifiers[c])
                 if prediction > maxPrediction:
                     maxPrediction = prediction
                     digit = c
 
             results[image] = digit
+        
+        return results
