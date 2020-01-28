@@ -78,7 +78,8 @@ class Adaboost:
             classifier_1.error = self.calculate_error(classifier_1, tags, D)
 
             for a in range(self.A_ATTEMPTS):
-                classifier_2 = self.generate_random_classif(N)
+                classifier_2 = self.generate_random_classif(N)                
+                
                 if classifier_2 in classifiers:
                     a -= 1
                     continue
@@ -98,11 +99,9 @@ class Adaboost:
 
     def _apply_strong_classif(self, image, classifier):
         data = [image]
-        for c in classifier:
-            c.classification = self.apply_classifier(c, data)
-
         prediction = 0.0
         for c in classifier:
+            c.classification = self.apply_classifier(c, data)
             prediction += c.confidence * c.classification[0]
 
         return prediction

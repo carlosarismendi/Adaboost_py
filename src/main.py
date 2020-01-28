@@ -3,7 +3,7 @@ from data_manager import DataManager
 from classifier_weak import ClassifierWeak
 import numpy as np
 
-adb = Adaboost(10, 10)
+adb = Adaboost(200, 200)
 dm = DataManager()
 percentage = 60
 
@@ -36,13 +36,13 @@ def print_results(prediction_training, prediction_test, training_tags, test_tags
 
 
 def generate_classifiers(data): #data is expected to be 1D array
-    classifiers = []
+    classifiers = np.empty(10, ClassifierWeak)
     print('')
     for digit in range(10):
         print('Classifier for digit: ' + str(digit))
         training_tags = dm.generate_tags_01(dm.training_set, digit)
         classifier = adb.adaboost(data, training_tags)
-        classifiers.append(classifier)
+        classifiers[digit] = classifier
 
     return classifiers
 
