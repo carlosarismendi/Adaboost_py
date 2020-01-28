@@ -1,6 +1,6 @@
 from os import listdir
 from os.path import isfile, join
-from img import Image
+import Image
 import numpy as np
 
 class DataManager:
@@ -8,7 +8,7 @@ class DataManager:
         self.training_set = []
         self.test_set = []
 
-    def __loadDBFromPath(self, folder):
+    def _load_db_from_path(self, folder):
         mnistImages = []
         imageCount = 0
 
@@ -30,7 +30,7 @@ class DataManager:
         return mnistImages
 
 
-    def loadImages(self, folder, percentage):
+    def load_images(self, folder, percentage):
         mnistImages = __loadDBFromPath(folder)
 
         for digit in range(len(mnistImages)):
@@ -51,7 +51,7 @@ class DataManager:
             digit_images[]            
 
 
-    def generateTags01(self, data, validDigit): #data is expected to be a 2D array
+    def generate_tags_01(self, data, validDigit): #data is expected to be a 2D array
         totalData = 0
         index = 0
 
@@ -68,7 +68,7 @@ class DataManager:
         return tags
 
     
-    def generateTags09(self, data): #data is expected to be a 2D array
+    def generate_tags_09(self, data): #data is expected to be a 2D array
         totalData = 0
 
         for i in range(len(data)):

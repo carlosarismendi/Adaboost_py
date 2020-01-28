@@ -1,0 +1,4 @@
+PIXELS = 784
+MAX_EDGE = 255
+LEFT = '<='
+RIGHT = '>'
