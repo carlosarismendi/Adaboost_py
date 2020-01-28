@@ -69,4 +69,14 @@ class DataManager:
 
     
     def generateTags09(self, data): #data is expected to be a 2D array
-        
+        totalData = 0
+
+        for i in range(len(data)):
+            totalData += len(data[i])
+                
+        tags = []
+        for digit in range(10):
+            for image in len(data[digit]):
+                tags.append(digit)
+
+        return tags
