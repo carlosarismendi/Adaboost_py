@@ -9,11 +9,11 @@ class ClassifierWeak:
             self.error = -1.0
             self.confidence = -1.0
                 
-        def with_values(self, pixel, edge, direction, size):
+        def with_values(self, pixel, edge, direction):
             self.pixel = -1
             self.edge = -1
             self.direction = ''
-            self.classification = np.empty(size)
+            self.classification = np.empty(0)
             self.error = -1.0
             self.confidence = -1.0
 
