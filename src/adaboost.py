@@ -1,8 +1,8 @@
 import constant
-import classifier_weak
 import random
 import numpy as np
-import image
+from image import Image
+from classifier_weak import ClassifierWeak
 from math import log2, exp
 
 class Adaboost:
@@ -12,16 +12,16 @@ class Adaboost:
 
 
     def generate_random_classif(self, dimension):
-        pixel = random.randrange(0, constant.PIXEL, 1)
-        edge = random.randrange(0, constant.EDGE+1, 1)
+        pixel = random.randrange(0, constant.PIXELS, 1)
+        edge = random.randrange(0, constant.MAX_EDGE + 1, 1)
         direction = constant.LEFT if random.randrange(0,2,1) == 0 else constant.RIGHT
-        classifier = ClassifierWeak.with_values(pixel, edge, direction)
+        classifier = ClassifierWeak(pixel, edge, direction)
 
         return classifier
 
     
     def apply_classifier(self, classifier, data): #data is expected to be a 1D array
-        classifier.classificaton = np.empty(len(data))
+        classifier.classification = np.empty(len(data))
 
         if classifier.direction == constant.LEFT:
             for image in range(len(data)):
@@ -36,7 +36,7 @@ class Adaboost:
         return classifier.classificaton
 
 
-    def calculate_error(self, classifier, tags, D):.
+    def calculate_error(self, classifier, tags, D):
 
         error = 0.0
         for i in range(len(tags)):
@@ -67,27 +67,28 @@ class Adaboost:
         N = len(data)
         D = np.full(N, 1/N)
 
-        classifiers = np.full(self.T_CLASSIFIERS, ClassifierWeak())
+        classifiers = np.empty(self.T_CLASSIFIERS, ClassifierWeak)
 
         for t in range(self.T_CLASSIFIERS):
-            classifier_1 = generate_random_classif(N)
-            classifier_1.classificaton = apply_classifier(classifier_1, data)
-            classifier_1.error = calculate_error(classifier_1, tags, D)
+            classifier_1 = self.generate_random_classif(N)
+            print(type(classifier_1))
+            classifier_1.classificaton = self.apply_classifier(classifier_1, data)
+            classifier_1.error = self.calculate_error(classifier_1, tags, D)
 
             for a in range(self.A_ATTEMPTS):
-                classifier_2 = generate_random_classif(N)
+                classifier_2 = self.generate_random_classif(N)
                 if classifier_2 in classifiers:
                     a -= 1
                     continue
 
-                classifier_2.classificaton = apply_classifier(classifier_2, data)
-                classifier_2.error = calculate_error(classifier_2, tags, D)
+                classifier_2.classificaton = self.apply_classifier(classifier_2, data)
+                classifier_2.error = self.calculate_error(classifier_2, tags, D)
 
                 if(classifier_2.error < classifier_1.error):
                     classifier_1 = classifier_2
 
-            classifier_1.confidence = calculate_confidence(classifier_1.error)            
-            update_D(classifier_1, tags, D)
+            classifier_1.confidence = self.calculate_confidence(classifier_1.error)            
+            self.update_D(classifier_1, tags, D)
             classifiers[t] = classifier_1
         
         return classifiers
@@ -96,7 +97,7 @@ class Adaboost:
     def _apply_strong_classif(self, image_, classifier):
         data = [image]
         for c in classifier:
-            c.classificaton = apply_classifier(c, data)
+            c.classificaton = self.apply_classifier(c, data)
 
         prediction = 0.0
         for c in classifier:
@@ -112,7 +113,7 @@ class Adaboost:
             maxPrediction = -999999.0
 
             for c in len(classifiers):
-                prediction = _apply_strong_classif(data[image], classifiers[c])
+                prediction = self._apply_strong_classif(data[image], classifiers[c])
                 if prediction > maxPrediction:
                     maxPrediction = prediction
                     digit = c

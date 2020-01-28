@@ -1,20 +1,20 @@
 from os import listdir
 from os.path import isfile, join
-import Image
+from image import Image
 import numpy as np
 
 class DataManager:
     def __init__(self):
-        self.training_set = np.empty(10)
-        self.test_set = np.empty(10)
+        self.training_set = []
+        self.test_set = []
 
     def load_db_from_path(self, folder):
         mnistImages = []
         imageCount = 0
 
         for digit in range(10):
-            print('Loading digit: ' + digit)
-            path = folder + '/d' + digit
+            print('Loading digit: ' + str(digit))
+            path = folder + '/d' + str(digit)
             files = [f for f in listdir(path) if isfile(join(path, f))]
             digit_images = []
 
@@ -26,7 +26,7 @@ class DataManager:
             mnistImages.append(digit_images)
             digit_images = []
         
-        print('Loaded ' + imageCount + ' images.')
+        print('Loaded ' + str(imageCount) + ' images.')
         return mnistImages
 
 
@@ -34,18 +34,19 @@ class DataManager:
         for digit in range(len(data)):
             total = len(data[digit])
             n_training = total - (total - (total * percentage / 100))            
-            digit_images = np.empty(n_training)
+            n_training = int(n_training)
+            digit_images = []
 
             for image in range(n_training): # Images for training
-                digit_images[image] = data[digit][image]
+                digit_images.append(data[digit][image])
 
-            self.training_set[digit] = digit_images
-            digit_images = np.empty(total - n_training)
+            self.training_set.append(digit_images)
+            digit_images = []
 
             for image in range(n_training, total): # Images for test
-                digit_images[image] = data[digit][image]
+                digit_images.append(data[digit][image])
             
-            self.test_set[digit] = digit_images           
+            self.test_set.append(digit_images)
 
 
     def generate_tags_01(self, data, validDigit): #data is expected to be a 2D array
@@ -73,7 +74,16 @@ class DataManager:
                 
         tags = []
         for digit in range(10):
-            for image in len(data[digit]):
+            for image in range(len(data[digit])):
                 tags.append(digit)
 
         return tags
+
+    
+    def flatten(self, array_2D):        
+        array_1D = []
+        for i in range(len(array_2D)):
+            for img in array_2D[i]:
+                array_1D.append(img)
+
+        return array_1D

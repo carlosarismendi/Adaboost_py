@@ -1,11 +1,11 @@
-import adaboost
-import data_manager
-import classifier_weak
+from adaboost import Adaboost
+from data_manager import DataManager
+from classifier_weak import ClassifierWeak
 import numpy as np
 
-global adb = Adaboost(200,200)
-global dm = DataManager()
-global percentage = 60
+adb = Adaboost(200, 200)
+dm = DataManager()
+percentage = 60
 
 def count_correct_predictions(predictions, tags):
     hits = 0
@@ -46,8 +46,8 @@ def manyImages(folder):
     data = dm.load_db_from_path(folder)
     dm.split_data(data, percentage)
 
-    training_img = dm.training_set.flatten()
-    test_img = dm.test_set.flatten()
+    training_img = dm.flatten(dm.training_set)
+    test_img = dm.flatten(dm.test_set)
     training_tags = dm.generate_tags_09(dm.training_set)
     test_tags = dm.generate_tags_09(dm.test_set)
 
