@@ -14,12 +14,13 @@ class DataManager:
 
         for digit in range(10):
             print('Loading digit: ' + str(digit))
-            path = folder + '/d' + str(digit)
-            files = [f for f in listdir(path) if isfile(join(path, f))]
+            path = folder + '/d' + str(digit) + '/'
+            files = [f for f in listdir(path) if isfile(join(path, f))]            
             digit_images = []
 
             for image in files:
-                img = Image(image)
+                img = Image(path+image)                
+                img.image_data = Image.flatten(img.image_data)
                 digit_images.append(img)
                 imageCount += 1
 
@@ -59,10 +60,16 @@ class DataManager:
         for i in range(validDigit):
             index += len(data[i])
         
-        tags = np.full(totalData, -1)
+        tags = np.empty(totalData)
+        for i in range(index):
+            tags[i] = -1
+
         for i in range(index, index+len(data[validDigit])):
             tags[i] = 1
         
+        for i in range(index+len(data[validDigit]), totalData):
+            tags[i] = -1
+
         return tags
 
     

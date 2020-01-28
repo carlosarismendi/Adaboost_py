@@ -18,8 +18,8 @@ class ClassifierWeak:
             self.error = -1.0
             self.confidence = -1.0
         
-        def __eq__(self, other):
-            return self.pixel == other.pixel and self.edge == other.edge and self.direction == other.direction
+        # def __eq__(self, other):
+        #     return self.pixel == other.pixel and self.edge == other.edge and self.direction == other.direction
         
-        def __ne__(self, other):
-            return not self == another
+        # def __ne__(self, other):
+        #     return not self == other

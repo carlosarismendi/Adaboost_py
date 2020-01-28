@@ -35,6 +35,7 @@ def print_results(prediction_training, prediction_test, training_tags, test_tags
 def generate_classifiers(data): #data is expected to be 1D array
     classifiers = []
     for digit in range(10):
+        print('\nClassifier por digit: ' + str(digit))
         training_tags = dm.generate_tags_01(dm.training_set, digit)
         classifier = adb.adaboost(data, training_tags)
         classifiers.append(classifier)
