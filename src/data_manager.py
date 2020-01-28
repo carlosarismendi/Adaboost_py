@@ -5,10 +5,10 @@ import numpy as np
 
 class DataManager:
     def __init__(self):
-        self.training_set = []
-        self.test_set = []
+        self.training_set = np.empty(10)
+        self.test_set = np.empty(10)
 
-    def _load_db_from_path(self, folder):
+    def load_db_from_path(self, folder):
         mnistImages = []
         imageCount = 0
 
@@ -30,25 +30,22 @@ class DataManager:
         return mnistImages
 
 
-    def load_images(self, folder, percentage):
-        mnistImages = __loadDBFromPath(folder)
-
-        for digit in range(len(mnistImages)):
-            total = len(mnistImages[digit])
+    def split_data(self, data, percentage):
+        for digit in range(len(data)):
+            total = len(data[digit])
             n_training = total - (total - (total * percentage / 100))            
-            digit_images = []
+            digit_images = np.empty(n_training)
 
             for image in range(n_training): # Images for training
-                digit_images.append(mnistImages[digit][image])
+                digit_images[image] = data[digit][image]
 
-            self.training_set.append(digit_images)                
-            digit_images = []
+            self.training_set[digit] = digit_images
+            digit_images = np.empty(total - n_training)
 
             for image in range(n_training, total): # Images for test
-                digit_images.append(mnistImages[digit][image])
+                digit_images[image] = data[digit][image]
             
-            self.test_set.append(digit_images)
-            digit_images[]            
+            self.test_set[digit] = digit_images           
 
 
     def generate_tags_01(self, data, validDigit): #data is expected to be a 2D array
