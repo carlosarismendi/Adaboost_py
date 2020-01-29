@@ -1,6 +1,4 @@
-# Adaboost_py
-
-Adaboost for digit recognizing
+# Adaboost for digit recognizing
 This is a basic implementation of the well-known Adaboost algorithm in Python. 
 For this solution, 1000 images with 28x28 pixels have been used (MNIST data subset).
 Each weak classifier only check 1 pixel/image and determines if the light intensity of that
