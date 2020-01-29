@@ -20,10 +20,10 @@ the amount of images used for training and the rest for testing purposes.
 them later.
 
 To run the program, run in the command prompt the following command inside the src folder:
-  python main.py
+  \npython main.py
   
 In case of using Python 3: 
-  python3 main.py
+  \npython3 main.py
   
 Note that OpenCV must be installed. To install OpenCV:
-  pip install opencv-python
+  \npip install opencv-python
