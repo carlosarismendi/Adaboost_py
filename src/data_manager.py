@@ -54,11 +54,10 @@ class DataManager:
     def generate_tags_01(self, data, validDigit): #data is expected to be a 2D array
         totalData = 0
         index = 0
-        size_data = len(data)
         size_data_valid = len(data[validDigit])
 
-        for i in range(size_data):
-            totalData += len(data[i])
+        for i in data:
+            totalData += len(i)
 
         for i in range(validDigit):
             index += len(data[i])
@@ -78,15 +77,13 @@ class DataManager:
     
     def generate_tags_09(self, data): #data is expected to be a 2D array
         totalData = 0
-        size_data = len(data)
-        for i in range(size_data):
-            totalData += len(data[i])
+        for i in data:
+            totalData += len(i)
                 
         tags = np.empty(totalData)
         index = 0
         for digit in range(10):
-            size_data_digit = len(data[digit])
-            for image in range(size_data_digit):
+            for image in data[digit]:
                 tags[index] = digit
                 index += 1
 
@@ -96,13 +93,13 @@ class DataManager:
     def flatten(self, array_2D):        
         size_array_2D = len(array_2D)
         total = 0
-        for i in range(size_array_2D):
-            total += len(array_2D[i])
+        for i in array_2D:
+            total += len(i)
 
         array_1D = np.empty(total, Image)        
         index = 0
-        for i in range(size_array_2D):
-            for img in array_2D[i]:
+        for i in array_2D:
+            for img in i:
                 array_1D[index] = img
                 index += 1
 

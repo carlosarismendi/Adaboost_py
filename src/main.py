@@ -9,9 +9,9 @@ percentage = 60
 
 def count_correct_predictions(predictions, tags):
     hits = 0
-    size_tags = len(tags)    
-    for i in range(size_tags):
-        hits += 1 if predictions[i] == tags[i] else 0
+
+    for (p, t) in zip(predictions, tags):
+        hits += 1 if p == t else 0
     
     return hits
 

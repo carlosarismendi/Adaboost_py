@@ -24,8 +24,8 @@ class ClassifierWeak:
         else:
             return False                            
     
-    # def __ne__(self, other):
-    #     return not self == other
+    def __ne__(self, other):
+        return not self == other
 
     
     def __str__(self):

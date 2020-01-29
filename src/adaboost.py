@@ -9,6 +9,7 @@ class Adaboost:
     def __init__(self, t_classifiers, a_attempts):
         self.T_CLASSIFIERS = t_classifiers
         self.A_ATTEMPTS = a_attempts
+        self._size_data = 0
 
 
     def generate_random_classif(self, dimension):
@@ -20,17 +21,16 @@ class Adaboost:
         return classifier
 
     
-    def apply_classifier(self, classifier, data): #data is expected to be a 1D array
-        size_data = len(data)
-        classifier.classification = np.empty(size_data)
+    def apply_classifier(self, classifier, data): #data is expected to be a 1D array        
+        classifier.classification = np.empty(self._size_data)
 
         if classifier.direction == constant.LEFT:
-            for image in range(size_data):
+            for image in range(self._size_data):
                 color = data[image].image_data[classifier.pixel]
                 classifier.classification[image] = 1 if color <= classifier.edge else -1
         
         else:
-            for image in range(size_data):
+            for image in range(self._size_data):
                 color = data[image].image_data[classifier.pixel]
                 classifier.classification[image] = 1 if color > classifier.edge else -1
 
@@ -39,9 +39,8 @@ class Adaboost:
 
     def calculate_error(self, classifier, tags, D):
 
-        error = 0.0
-        size_tags = len(tags)
-        for i in range(size_tags):        
+        error = 0.0        
+        for i in range(self._size_data):        
             e = 0 if classifier.classification[i] == tags[i] else 1
             error += D[i] * e
 
@@ -54,20 +53,20 @@ class Adaboost:
 
     
     def update_D(self, classifier, tags, D):
-        Z = 0.0
-        size_tags = len(tags)
-        for i in range(size_tags):
+        Z = 0.0        
+        for i in range(self._size_data):
             D[i] = D[i] * exp(-classifier.confidence * tags[i] * classifier.classification[i])
             Z += D[i]
         
-        for i in range(size_tags):
+        for i in range(self._size_data):
             D[i] = D[i] / Z
 
         return D
 
 
     def adaboost(self, data, tags):
-        N = len(data)
+        self._size_data = len(data)
+        N = self._size_data
         D = np.full(N, 1/N, float)
 
         classifiers = np.empty(self.T_CLASSIFIERS, ClassifierWeak)
@@ -76,12 +75,11 @@ class Adaboost:
             classifier_1 = self.generate_random_classif(N)            
             classifier_1.classification = self.apply_classifier(classifier_1, data)
             classifier_1.error = self.calculate_error(classifier_1, tags, D)
-
-            for a in range(self.A_ATTEMPTS):
+            a = 0
+            while a < self.A_ATTEMPTS: 
                 classifier_2 = self.generate_random_classif(N)                
                 
-                if classifier_2 in classifiers:
-                    a -= 1
+                if classifier_2 in classifiers:                
                     continue
 
                 classifier_2.classification = self.apply_classifier(classifier_2, data)
@@ -89,6 +87,7 @@ class Adaboost:
 
                 if(classifier_2.error < classifier_1.error):
                     classifier_1 = classifier_2
+                a += 1
 
             classifier_1.confidence = self.calculate_confidence(classifier_1.error)            
             self.update_D(classifier_1, tags, D)
@@ -108,11 +107,11 @@ class Adaboost:
 
     
     def apply_strong_classifiers(self, data, classifiers):
-        size_data = len(data)
+        self._size_data = len(data)
         size_classifiers = len(classifiers)
-        results = np.empty(size_data)
+        results = np.empty(self._size_data)
 
-        for image in range(size_data):
+        for image in range(self._size_data):
             digit = 0
             maxPrediction = -999999.0
 
