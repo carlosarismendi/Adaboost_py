@@ -33,22 +33,22 @@ class DataManager:
 
     def split_data(self, data, percentage):
         size_data = len(data)
-        for digit in range(size_data):
-            total = len(data[digit])
+        for i in range(size_data):
+            total = len(data[i])
             n_training = total - (total - (total * percentage / 100))            
             n_training = int(n_training)
             digit_images = np.empty(n_training, Image)
 
-            for image in range(n_training): # Images for training
-                digit_images[image] = data[digit][image]
+            for j in range(n_training): # Images for training
+                digit_images[j] = data[i][j]
 
-            self.training_set[digit] = digit_images
+            self.training_set[i] = digit_images
             digit_images = np.empty(total - n_training, Image)
 
-            for image in range(n_training, total): # Images for test
-                digit_images[image - n_training] = data[digit][image]
+            for j in range(n_training, total): # Images for test
+                digit_images[j - n_training] = data[i][j]
             
-            self.test_set[digit] = (digit_images)
+            self.test_set[i] = (digit_images)
 
 
     def generate_tags_01(self, data, validDigit): #data is expected to be a 2D array
