@@ -1,6 +1,6 @@
 # Adaboost for digit recognizing
 This is a basic implementation of the well-known Adaboost algorithm in Python. 
-For this solution, 1000 images with 28x28 pixels have been used (MNIST data subset).
+For this solution, [MNIST](http://yann.lecun.com/exdb/mnist/) subset of 1000 images with 28x28 pixels have been used.
 Each weak classifier only checks 1 pixel/image and determines if the light intensity of that
 pixel is "less or equal" or greater than a given edge and then classifies the input image as
 1 o -1, being 1 the digit that the classifier must recognize as "ok" and -1 the others. This way,
@@ -20,10 +20,11 @@ the amount of images used for training and the rest for testing purposes.
 them later.
 
 To run the program, run in the command prompt the following command inside the `src` folder:
-  <br>`python main.py`
+```bash
+python main.py
+```
   
-In case of using Python 3: 
-  <br>`python3 main.py`
-  
-Note that OpenCV must be installed. To install OpenCV:
-  <br>`pip install opencv-python`
+Note that [OpenCV](https://opencv.org/) must be installed in order to manipulate the images. To install [OpenCV](https://opencv.org/):  
+```bash
+pip install opencv-python
+```
